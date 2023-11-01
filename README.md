@@ -22,6 +22,8 @@ The app will automatically pick up on any defined `timer` entities in Homeassist
 
 See the source code if you want to change the colors of the progress bar.
 
+![Teatimer](screenshots/teatimer.png)
+
 Example configuration:
 
 ```yaml
@@ -56,10 +58,13 @@ MyProximity:
 
 ## Weather
 
-A basic weather display. Shows current conditions (with optional second sensor for local measurements) and today's (it it is before 18:00) or tomorrow's forecast. Has only been tested with the OpenWeathermap integration.
+A basic weather display. Shows current conditions (with optional second sensor for local measurements) and today's (it it is before 18:00) or tomorrow's forecast with a progress bar for the probability of rain. Has only been tested with the OpenWeathermap integration.
 
 > [!NOTE]  
 > You will need to adapt the icon definitions in the source code for the different weather states to your needs and download all defined icons for the best effect. Some icons from the LaMetric library are broken on Awtrix Light and need to be re-saved without compression to look nice.
+
+![Current Weather](screenshots/weather.png)
+![Forecast](screenshots/weather2.png)
 
 Example configuration:
 
@@ -76,6 +81,8 @@ UlanziWeather:
 ## Window Status
 
 Displays open windows.
+
+![Windows](screenshots/windows.png)
 
 Example configuration:
 
@@ -95,6 +102,8 @@ UlanziWindowStatus:
 ## Humidity Warning
 
 Activates an indicator light when humidity in a defined room reaches a threshold. It will display these rooms once when they reach the threshold and can also display the list again on a keypess.
+
+![Humidity](screenshots/humidity.png)
 
 Example configuration:
 
