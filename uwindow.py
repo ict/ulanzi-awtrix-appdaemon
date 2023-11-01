@@ -1,4 +1,4 @@
-from apps.ulanzi.ulanzi import UlanziApp
+from ulanzi import UlanziApp
 
 
 class UlanziWindowAlert(UlanziApp):
