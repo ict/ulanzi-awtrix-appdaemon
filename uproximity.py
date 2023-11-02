@@ -11,7 +11,7 @@ class UlanziProximityInfo(UlanziApp):
             self.tracker = self.args['tracker']
             self.proximity_sensor = self.args['proximity_sensor']
             self.person = self.args['person']
-            self.change_threshold = self.args.get('change_threshold', 100)
+            self.change_threshold = self.args.get('change_threshold', 10)
         except KeyError as err:
             self.error("Failed getting configuration {}".format(err.args[0]))
             return
@@ -20,15 +20,6 @@ class UlanziProximityInfo(UlanziApp):
         self.listen_state(self.proximity_change, self.tracker)
 
     def proximity_change(self, entity, attribute, old, new, kwargs):
-        if entity == self.proximity_sensor:
-            self.log(f"Proximity change: {old} -> {new}")
-            self.log(f"Last distance: {self.last_distance} | Last location: {self.last_location}")
-            if old == new or new == self.last_distance:
-                return
-            if abs(int(new) - int(self.last_distance)) >= self.change_threshold:
-                self.last_distance = new
-                self.update_app()
-
         tracker_state = self.get_state(self.tracker)
         self.log(f"Tracker state: {tracker_state}")
         if tracker_state != 'not_home':
@@ -38,6 +29,16 @@ class UlanziProximityInfo(UlanziApp):
                 self.send_notification(f"{self.person} @ {tracker_state}")
                 self.last_location = tracker_state
             return
+
+        if entity == self.proximity_sensor:
+            self.log(f"Proximity change: {old} -> {new}")
+            self.log(f"Last distance: {self.last_distance} | Last location: {self.last_location}")
+            if old == new or new == self.last_distance:
+                return
+            if abs(int(new) - int(self.last_distance)) >= self.change_threshold:
+                self.last_distance = new
+                self.update_app()
+
 
     def get_app_text(self):
         state = self.get_state(self.proximity_sensor, attribute='all')
