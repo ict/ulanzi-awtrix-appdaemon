@@ -28,7 +28,7 @@ class UlanziHumidityWarning(UlanziApp):
             self.show_buttons = [self.show_buttons]
         for button in self.show_buttons:
             self.listen_state(self.show_humidity, button)
-        self.update_state(True)
+        self.update_state(False)
 
     def sensor_change(self, entity, attribute, old, new, kwargs):
         sensor_name = kwargs['sensor_name']

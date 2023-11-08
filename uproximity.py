@@ -30,6 +30,7 @@ class UlanziProximityInfo(UlanziApp):
                 self.last_location = tracker_state
             return
 
+        self.last_location = tracker_state
         if entity == self.proximity_sensor:
             self.log(f"Proximity change: {old} -> {new}")
             self.log(f"Last distance: {self.last_distance} | Last location: {self.last_location}")
