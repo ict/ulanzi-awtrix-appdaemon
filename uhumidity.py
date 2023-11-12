@@ -20,8 +20,14 @@ class UlanziHumidityWarning(UlanziApp):
             sensor_entity = sensor['entity']
             sensor_name = sensor['name']
             current_state = self.get_state(sensor_entity)
-            if float(current_state) > self.threshold:
-                self.sensors_above.add(sensor_name)
+            self.log(f"Current state of {sensor_name}: {current_state}")
+            try:
+                if float(current_state) > self.threshold:
+                    self.sensors_above.add(sensor_name)
+                    self.log(f"Adding {sensor_name} to sensors_above")
+            except ValueError:
+                self.log(f"{sensor}: Could not parse {current_state} as float")
+
             self.listen_state(self.sensor_change, sensor_entity, sensor_name=sensor_name)
 
         if not isinstance(self.show_buttons, list):
@@ -34,7 +40,11 @@ class UlanziHumidityWarning(UlanziApp):
         sensor_name = kwargs['sensor_name']
         new_sensor = False
 
-        humidity = float(new)
+        try:
+            humidity = float(new)
+        except ValueError:
+            self.log(f"{entity}: Could not parse {new} as float")
+            return
         if humidity > self.threshold:
             self.log(f"Over thresh")
             if sensor_name not in self.sensors_above:
