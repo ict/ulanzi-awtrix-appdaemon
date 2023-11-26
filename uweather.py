@@ -56,7 +56,13 @@ class UlanziWeather(UlanziApp):
             forecast = current['attributes']['forecast'][0]
         else:
             forecast = current['attributes']['forecast'][1]
-        temp_tomorrow = f"{int(round(forecast['templow'], 0))} - {int(round(forecast['temperature'], 0))}"
+        temp_tomorrow_low = forecast['templow']
+        temp_tomorrow_hight = forecast['temperature']
+        temp_tomorrow = f"{int(round(temp_tomorrow_low))} - {int(round(temp_tomorrow_hight))}"
+        if temp_tomorrow_hight < 0:
+            temp_tomorrow = temp_tomorrow.replace('-', '|')
+        if len(temp_tomorrow) > 7:
+            temp_tomorrow = temp_tomorrow.replace(' ', '')
         icon_tomorrow = ICON_MAP.get(forecast['condition'], ICON_MAP['exceptional'])
         preci_tomorrow = forecast['precipitation_probability']
 
