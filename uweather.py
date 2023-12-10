@@ -60,7 +60,7 @@ class UlanziWeather(UlanziApp):
         temp_tomorrow_hight = forecast['temperature']
         temp_tomorrow = f"{int(round(temp_tomorrow_low))} - {int(round(temp_tomorrow_hight))}"
         if temp_tomorrow_hight < 0:
-            temp_tomorrow = temp_tomorrow.replace('-', '|')
+            temp_tomorrow = f"{int(round(temp_tomorrow_low))} | {int(round(temp_tomorrow_hight))}"
         if len(temp_tomorrow) > 7:
             temp_tomorrow = temp_tomorrow.replace(' ', '')
         icon_tomorrow = ICON_MAP.get(forecast['condition'], ICON_MAP['exceptional'])
@@ -80,6 +80,7 @@ class UlanziWeather(UlanziApp):
             },
         ]
         self.call_service('mqtt/publish', topic=self.mqtt_app_topic, payload=json.dumps(payload))
+        # self.log(f"Updated display: {current_temp} | {temp_tomorrow}")
 
     def update_app(self, *args, **kwargs):
         self.update_app_custom()

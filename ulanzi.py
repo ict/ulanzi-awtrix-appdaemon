@@ -66,7 +66,7 @@ class UlanziApp(hass.Hass):
     def delete_app(self, *args, **kwargs):
         self.call_service('mqtt/publish', topic=self.mqtt_app_topic, payload='{}')
 
-    def send_notification(self, message, icon=None, sound=None):
+    def send_notification(self, message, icon=None, sound=None, **kwargs):
         self.log(f"Sending notification: {message}")
         payload = {
             'text': message,
@@ -77,6 +77,8 @@ class UlanziApp(hass.Hass):
             payload['sound'] = self.sound
         if sound:
             payload['sound'] = sound
+        if kwargs:
+            payload.update(kwargs)
         self.call_service('mqtt/publish', topic=f'{self.prefix}/notify', payload=json.dumps(payload))
 
 

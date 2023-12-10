@@ -46,18 +46,17 @@ class UlanziHumidityWarning(UlanziApp):
             self.log(f"{entity}: Could not parse {new} as float")
             return
         if humidity > self.threshold:
-            self.log(f"Over thresh")
+            # self.log(f"Over thresh")
             if sensor_name not in self.sensors_above:
                 new_sensor = True
                 self.sensors_above.add(sensor_name)
         elif sensor_name in self.sensors_above:
-            self.log(f"No longer over thresh")
+            # self.log(f"No longer over thresh")
             self.sensors_above.remove(sensor_name)
 
         self.update_state(new_sensor)
 
     def update_state(self, new_sensor):
-        self.log(f"update_state: {self.sensors_above}")
         if not self.sensors_above:
             self.turn_off(self.indicator)
         else:
