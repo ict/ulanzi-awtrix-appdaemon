@@ -66,8 +66,8 @@ class UlanziHumidityWarning(UlanziApp):
 
     def show_humidity(self, entity, attribute, old, new, kwargs):
         self.log(f"old: {old}, new: {new}")
-        if old == new or new == 'on':
-            return  # Looks like it works better when we trigger on button release
+        if old == new or new == 'on' or new == 'unavailable':
+            return  # Generally trigger on button release, but not if new value is not meaningful
         entries = []
         if self.sensors_above:
             # Send a new notification
