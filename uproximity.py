@@ -10,6 +10,7 @@ class UlanziProximityInfo(UlanziApp):
         try:
             self.tracker = self.args['tracker']
             self.proximity_sensor = self.args['proximity_sensor']
+            self.direction_sensor = self.args['direction_sensor']
             self.person = self.args['person']
             self.change_threshold = self.args.get('change_threshold', 10)
         except KeyError as err:
@@ -42,8 +43,8 @@ class UlanziProximityInfo(UlanziApp):
 
 
     def get_app_text(self):
-        state = self.get_state(self.proximity_sensor, attribute='all')
-        dir = state['attributes']['dir_of_travel']
+        state = self.get_state(self.proximity_sensor)
+        dir = self.get_state(self.direction_sensor)
         distance = int(state['state'])
         if distance < 1000:
             unit = 'm'
