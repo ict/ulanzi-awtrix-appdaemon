@@ -45,7 +45,7 @@ class UlanziProximityInfo(UlanziApp):
     def get_app_text(self):
         state = self.get_state(self.proximity_sensor)
         dir = self.get_state(self.direction_sensor)
-        distance = int(state['state'])
+        distance = int(state)
         if distance < 1000:
             unit = 'm'
         else:

@@ -38,6 +38,7 @@ class UlanziTimerDisplay(UlanziApp):
                 'progressBC': BAR_COLOR_BG,
                 'progressC': BAR_COLOR_RUNNING if self.status == 'running' else BAR_COLOR_PAUSED,
                 'progress': int(100 - (self.remaining / self.total * 100)),
+                'lifetime': self.remaining + 30
             }
             if self.remaining < 30:
                 result['duration'] = 30
