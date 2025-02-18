@@ -9,34 +9,34 @@ CAUTION: Due to Appdaemon's limitations, calling the weather.get_forecasts servi
         See https://github.com/AppDaemon/appdaemon/issues/1837
 
         This means you need to add a script to homeassistant with the following content:
-        ```
-        alias: get_forecast_now
-        mode: single
-        icon: mdi:room-service-outline
-        fields:
-            call_id:
-                name: Call id
-                default: 1
-                description: An id to uniquely identify the call
-                required: true
-                selector:
-                text: null
-            entity:
-                selector:
-                entity: {}
-                name: entity
-        sequence:
-            - service: weather.get_forecasts
-                target:
-                entity_id: '{{ entity }}'
-                data:
-                type: daily
-                response_variable: response
-            - event: call_service_with_response.finished
-                event_data:
-                call_id: '{{ call_id }}'
-                response: '{{ response }}'
-        ```
+```
+alias: get_forecast_now
+mode: single
+icon: mdi:room-service-outline
+fields:
+  call_id:
+    name: Call id
+    default: 1
+    description: An id to uniquely identify the call
+    required: true
+    selector:
+      text: null
+  entity:
+    selector:
+      entity: {}
+    name: entity
+sequence:
+  - target:
+      entity_id: "{{ entity }}"
+    data:
+      type: daily
+    response_variable: response
+    action: weather.get_forecasts
+  - event: call_service_with_response.finished
+    event_data:
+      call_id: "{{ call_id }}"
+      response: "{{ response }}"
+```
 """
 
 ICON_MAP = {
