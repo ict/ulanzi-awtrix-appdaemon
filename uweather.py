@@ -1,19 +1,6 @@
-import random
 import json
+
 from ulanzi import UlanziApp
-
-"""
-CAUTION
-
-This module is not async, but needs data obtained from the
-weather/get_forecasts service call to Homeassistant.
-
-If something does not work, check if you have the following
-option set in your appdaemon.yaml in the plugins/hass section:
-
-return_result = true
-
-"""
 
 ICON_MAP = {
     'rainy': '72',
@@ -36,7 +23,6 @@ ICON_MAP = {
 
 
 class UlanziWeather(UlanziApp):
-
     def initialize(self):
         super().initialize()
         try:
@@ -44,17 +30,17 @@ class UlanziWeather(UlanziApp):
             self.weather_entity = self.get_entity(self.weather_entity_name)
             self.current_temp_sensor = self.args.get('current_temp_sensor')
         except KeyError as err:
-            self.error("Failed getting configuration {}".format(err.args[0]))
+            self.error('Failed getting configuration {}'.format(err.args[0]))
             return
-        
+
         self.update_app()
         self.run_every(self.update_app, 'now', 300)
         if self.current_temp_sensor:
             self.listen_state(self.update_app, self.current_temp_sensor)
-    
+
     def real_update_app(self, forecast_obj):
         # Get current state and temperature
-        current = self.weather_entity.get_state(attribute="all")
+        current = self.weather_entity.get_state(attribute='all')
         current_icon = ICON_MAP.get(current['state'], ICON_MAP['exceptional'])
         if self.current_temp_sensor and (t := self.get_state(self.current_temp_sensor)) != 'unknown':
             current_temp = round(float(t), 1)
@@ -67,9 +53,9 @@ class UlanziWeather(UlanziApp):
             forecast = forecast_obj['forecast'][1]
         temp_tomorrow_low = forecast['templow']
         temp_tomorrow_hight = forecast['temperature']
-        temp_tomorrow = f"{int(round(temp_tomorrow_low))} - {int(round(temp_tomorrow_hight))}"
+        temp_tomorrow = f'{int(round(temp_tomorrow_low))} - {int(round(temp_tomorrow_hight))}'
         if temp_tomorrow_hight < 0:
-            temp_tomorrow = f"{int(round(temp_tomorrow_low))} | {int(round(temp_tomorrow_hight))}"
+            temp_tomorrow = f'{int(round(temp_tomorrow_low))} | {int(round(temp_tomorrow_hight))}'
         if len(temp_tomorrow) > 7:
             temp_tomorrow = temp_tomorrow.replace(' ', '')
         icon_tomorrow = ICON_MAP.get(forecast['condition'], ICON_MAP['exceptional'])
@@ -78,7 +64,7 @@ class UlanziWeather(UlanziApp):
         payload = [
             {
                 'icon': current_icon,
-                'text': f"{current_temp}°",
+                'text': f'{current_temp}°',
             },
             {
                 'icon': icon_tomorrow,
@@ -96,9 +82,9 @@ class UlanziWeather(UlanziApp):
             return
 
         forecast = self.call_service(
-            "weather/get_forecasts",
-            target={"entity_id": self.weather_entity_name},
-            service_data={"type": "daily"}
+            'weather/get_forecasts',
+            target={'entity_id': self.weather_entity_name},
+            service_data={'type': 'daily'},
         )
 
         weather_data = None
@@ -106,7 +92,8 @@ class UlanziWeather(UlanziApp):
             weather_data = forecast['result']['response'][self.weather_entity_name]
         except KeyError:
             import pprint
-            self.log("Got unexpected service callback with:" + pprint.pformat(data['result']))
+
+            self.log('Got unexpected service callback with:' + pprint.pformat(forecast['result']))
             return
         self.real_update_app(weather_data)
 
